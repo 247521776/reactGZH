@@ -3,8 +3,11 @@ import React, {Component} from "react";
 import 'antd/lib/form/style/css';
 import 'antd/lib/modal/style/css';
 import 'antd/lib/button/style/css';
-import $ from "jquery";
 const FormItem = Form.Item;
+const confirm = Modal.confirm;
+const deleteStyle = {
+    "marginLeft": "5%"
+};
 
 const CollectionCreateForm = Form.create()(
     (props) => {
@@ -32,7 +35,7 @@ const CollectionCreateForm = Form.create()(
                             initialValue: data.content || "",
                             rules: [{ required: true, message: '请填写内容!' }],
                         })(
-                            <Input type="textarea" />
+                            <Input type="textarea" rows="10" />
                         )}
                     </FormItem>
                 </Form>
@@ -44,6 +47,8 @@ const CollectionCreateForm = Form.create()(
 class CollectionsPage extends Component {
     constructor() {
         super(...arguments);
+        
+        this.onConfirm = this.onConfirm.bind(this);
 
         this.state = {
             visible: false,
@@ -53,6 +58,19 @@ class CollectionsPage extends Component {
     showModal = () => {
         this.setState({ visible: true });
     };
+
+    onConfirm() {
+        const id = this.props.data._id;
+        confirm({
+            title: `确定要删除${this.props.data.keywords}?`,
+            onOk: () => {
+                this.props.onDelete(id, this.props.index);
+            },
+            // onCancel() {
+            //     console.log('Cancel');
+            // },
+        });
+    }
 
     handleCancel = () => {
         this.setState({ visible: false });
@@ -64,11 +82,8 @@ class CollectionsPage extends Component {
             if (err) {
                 return;
             }
-            // if () {
-            //
-            // }
 
-            console.log('Received values of form: ', values);
+            this.props[this.props.methodName](this.props.data, values, this.props.index);
             form.resetFields();
             this.setState({ visible: false });
         });
@@ -79,18 +94,30 @@ class CollectionsPage extends Component {
     };
 
     render() {
+        let zujian;
+        if (this.props.onDelete) {
+            zujian= <Button style={deleteStyle} type="danger" onClick={this.onConfirm}>删除</Button>;
+        }
+        let addStyle = {};
+        if (this.props.onAdd) {
+            addStyle = {
+                "marginLeft": "10%",
+                "marginTop": "2%"
+            };
+        }
         return (
             <div>
-                <Button type="primary" onClick={this.showModal}>{this.props.name}</Button>
+                <Button style={addStyle} type="primary" onClick={this.showModal}>{this.props.name}</Button>
                 <CollectionCreateForm
                     ref={this.saveFormRef}
                     visible={this.state.visible}
                     onCancel={this.handleCancel}
                     onCreate={this.handleCreate}
-                    data={this.props.data}
+                    data={this.props.data || {}}
                     name={this.props.name}
                     title={this.props.title}
                 />
+                {zujian}
             </div>
         );
     }

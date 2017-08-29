@@ -1,0 +1,11 @@
+.Login .reply {
+    width:1440px;
+    height: 800px;
+    overflow:hidden;
+}
+.ant-table-pagination {
+    margin: 16px 16px
+}
+table {
+    background-color: #FFFFFF
+}
