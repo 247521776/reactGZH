@@ -42,8 +42,8 @@ const loginStyle = {
     margin: "15% 45%",
     width: "15%"
 };
-// const host = "http://woshiyang.xyz";
-const host = "http://127.0.0.1:2999";
+const host = "http://woshiyang.xyz";
+// const host = "http://127.0.0.1:2999";
 
 class CounterContainer extends Component {
     constructor() {
